@@ -3,6 +3,8 @@ import pandas as pd
 
 app = Flask(__name__)
 
+#test
+
 # endpoint to get user detail by id
 @app.route("/quiz/<income>/<citizen>/<expenditure>/<first_choice>/<second_choice>/<third_choice>", methods=["GET"])
 def user_detail(income, citizen, expenditure, first_choice, second_choice, third_choice):
