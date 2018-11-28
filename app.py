@@ -6,7 +6,7 @@ app = Flask(__name__)
 # endpoint to get user detail by id
 @app.route("/quiz/<income>/<citizen>/<expenditure>/<first_choice>/<second_choice>/<third_choice>", methods=["GET"])
 def user_detail(income, citizen, expenditure, first_choice, second_choice, third_choice):
-    input_data = {"income": int(str(income)), # Check if eligible
+    input_data = {"income": int(str(income)) * 12, # Check if eligible
               "citizen": str(citizen), 
               "expenditure": int(str(expenditure)),# fee.annual should be less than 1% of expenditure
               "first_choice" : str(first_choice),
@@ -25,7 +25,7 @@ def apply_filter(input_data):
         income_limit = 'income.foreign_conv'
     df_1_filtered = df[df[income_limit] <= input_data['income']]
     # filter by expenditure
-    df_2_filtered = df_1_filtered#[df_1_filtered['fee.annual_conv'] * 100 <= input_data['expenditure']]
+    df_2_filtered = df_1_filtered[df_1_filtered['fee.annual_conv'] * 100 <= input_data['expenditure']]
     
     # Initialize final results
     df_3_filtered = pd.DataFrame()
