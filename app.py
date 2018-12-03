@@ -91,10 +91,18 @@ def apply_filter(input_data):
         for i in cardlinks.keys():
             if i in card:
                 return cardlinks[i][0]
+            
+    def clean_up(card):
+        cards_split = card.split('-')
+        cards_split = [card.upper() for card in cards_split]
+        result = ' '.join(cards_split) 
+        return result
         
     result['card-link'] = result['card'].apply(get_link)
+    result['full-name'] = result['card'].apply(clean_up)
 
     return result
+
 
 if __name__ == '__main__':
     app.run(debug=True)
