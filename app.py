@@ -28,8 +28,8 @@ def apply_filter(input_data):
         income_limit = 'income.foreign_conv'
     df_1_filtered = df[df[income_limit] <= input_data['income']]
     # filter by expenditure
-    df_2_filtered = df_1_filtered[df_1_filtered['fee.annual_conv'] * 100 <= input_data['expenditure']]
-    
+    #df_2_filtered = df_1_filtered[df_1_filtered['fee.annual_conv'] * 100 <= input_data['expenditure']]
+    df_2_filtered = df_1_filtered
     # Initialize final results
     df_3_filtered = pd.DataFrame()
     
