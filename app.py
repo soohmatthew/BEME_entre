@@ -103,12 +103,7 @@ def apply_filter(input_data):
     result['full-name'] = result['card'].apply(clean_up)
     def keyfeatures_formatter(keyfeatures):
         keyfeatures = ast.literal_eval(keyfeatures)
-        result = ""
-        count = 1
-        for i in keyfeatures:
-            result += str(count) + '. ' + i + '\n'
-            count += 1
-        return result
+        return keyfeatures
     
     result['benefits.keyfeatures'] = result['benefits.keyfeatures'].apply(keyfeatures_formatter)
     return result
