@@ -17,6 +17,7 @@ def user_detail(income, citizen, expenditure, first_choice, second_choice, third
     return json_df
 
 import pandas as pd
+import ast
 
 def apply_filter(input_data):
     df = pd.read_csv("credit_card_scores.csv")
@@ -100,9 +101,17 @@ def apply_filter(input_data):
         
     result['card-link'] = result['card'].apply(get_link)
     result['full-name'] = result['card'].apply(clean_up)
-
+    def keyfeatures_formatter(keyfeatures):
+        keyfeatures = ast.literal_eval(keyfeatures)
+        result = ""
+        count = 1
+        for i in keyfeatures:
+            result += str(count) + '. ' + i + '\n'
+            count += 1
+        return result
+    
+    result['benefits.keyfeatures'] = result['benefits.keyfeatures'].apply(keyfeatures_formatter)
     return result
-
 
 if __name__ == '__main__':
     app.run(debug=True)
