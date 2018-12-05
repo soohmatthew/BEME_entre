@@ -21,6 +21,7 @@ import ast
 
 def apply_filter(input_data):
     df = pd.read_csv("credit_card_scores.csv")
+    print(df.columns)
     
     # filter by eligibility
     if input_data['citizen'] == "Singaporean":
@@ -70,10 +71,18 @@ def apply_filter(input_data):
     df_3_filtered["preferences.debt_servicing"] = preference_dict["preferences.debt_servicing"] * df_2_filtered["interest.rate_conv"]
     df_3_filtered["Final Score"] = df_3_filtered.sum(axis = 1)
     df_3_filtered['card'] = df_2_filtered['card']
-    df_3_filtered['benefits.keyfeatures'] = df_2_filtered['benefits.keyfeatures'].fillna(0)
+    list_of_benefits = ['benefits.airmile',
+       'benefits.cashback', 'benefits.dining', 'benefits.grocery',
+       'benefits.onlineshop', 'benefits.petrol', 'Rewards', 'Shopping',
+       'Student']
+    for i in list_of_benefits:
+        df_3_filtered[i] = df_2_filtered[i].fillna(0)
     df_3_filtered.sort_values(by=["Final Score"], inplace = True, ascending = False)
     df_3_filtered.reset_index(inplace = True)
-    result = df_3_filtered.head(3)[['card', 'Final Score','benefits.keyfeatures']]
+    result = df_3_filtered.head(3)[['card', 'Final Score', 'benefits.airmile',
+       'benefits.cashback', 'benefits.dining', 'benefits.grocery',
+       'benefits.onlineshop', 'benefits.petrol', 'Rewards', 'Shopping',
+       'Student']]
     
     cardlinks = {"american" : ['https://www.americanexpress.com/sg/credit-cards/all-cards/'],
     "bank-of-china" : ['http://www.bankofchina.com/sg/bcservice/bc1/'], # need to do further validation for the card type
@@ -101,11 +110,23 @@ def apply_filter(input_data):
         
     result['card-link'] = result['card'].apply(get_link)
     result['full-name'] = result['card'].apply(clean_up)
-    def keyfeatures_formatter(keyfeatures):
-        keyfeatures = ast.literal_eval(keyfeatures)
-        return keyfeatures
-    
-    result['benefits.keyfeatures'] = result['benefits.keyfeatures'].apply(keyfeatures_formatter)
+
+    for i in list_of_benefits:
+        result[i] = result[i].apply(lambda x : ast.literal_eval(x))
+        
+    def compile_string(row):
+        counter = 1
+        result = ""
+        for i in list_of_benefits:
+            if row[i] != 0:
+                for value in row[i]:
+                    print(value)
+                    result += str(counter) + ". " + value + "\n"
+                    counter += 1
+        return result
+
+    result["benefits.keyfeatures"] = result.apply(compile_string, axis = 1)
+    result = result[["card","Final Score","benefits.keyfeatures","card-link","full-name"]]
     return result
 
 if __name__ == '__main__':
