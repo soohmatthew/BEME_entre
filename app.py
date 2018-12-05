@@ -125,6 +125,7 @@ def apply_filter(input_data):
         for i in list_of_benefits:
             if row[i] != 0:
                 for value in row[i]:
+                    value = value.replace("X", "x")
                     value = camel_case_split(value)
                     for item in value:
                         result += str(counter) + ". " + item + "\n"
