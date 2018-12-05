@@ -128,7 +128,7 @@ def apply_filter(input_data):
                     value = value.replace("X", "x")
                     value = camel_case_split(value)
                     for item in value:
-                        result += str(counter) + ". " + item + "\n"
+                        result += str(counter) + ". " + item + "\n" + "\n"
                         counter += 1
         print(result)
         return result
