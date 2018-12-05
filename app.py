@@ -18,6 +18,7 @@ def user_detail(income, citizen, expenditure, first_choice, second_choice, third
 
 import pandas as pd
 import ast
+from re import finditer
 
 def apply_filter(input_data):
     df = pd.read_csv("credit_card_scores.csv")
@@ -114,15 +115,21 @@ def apply_filter(input_data):
     for i in list_of_benefits:
         result[i] = result[i].apply(lambda x : ast.literal_eval(x))
         
+    def camel_case_split(identifier):
+        matches = finditer('.+?(?:(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)', identifier)
+        return [m.group(0) for m in matches]
+        
     def compile_string(row):
         counter = 1
         result = ""
         for i in list_of_benefits:
             if row[i] != 0:
                 for value in row[i]:
-                    print(value)
-                    result += str(counter) + ". " + value + "\n"
-                    counter += 1
+                    value = camel_case_split(value)
+                    for item in value:
+                        result += str(counter) + ". " + item + "\n"
+                        counter += 1
+        print(result)
         return result
 
     result["benefits.keyfeatures"] = result.apply(compile_string, axis = 1)
